@@ -1,0 +1,81 @@
+﻿@model BL.ViewModel.OrderViewModel
+
+@{
+    Layout = "_AdminLayout.cshtml";
+    ViewBag.Title = "OrderDetails";
+}
+
+<h2>Order Details</h2>
+
+<div>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.DateTime)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.DateTime)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.totalPrice)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.totalPrice)
+        </dd>
+
+        <dt>
+            Username
+        </dt>
+
+        <dd>
+            @User.Identity.Name
+        </dd>
+
+        <dt>Address</dt>
+        <dd>@ViewBag.Address</dd>
+
+        <dt>
+            Payment Method
+        </dt>
+
+        <dd>
+            @if (ViewBag.paymentMethod.Method == "payment on delivery")
+            {
+                <span>Payment On Delevery</span>
+            }
+            else if (ViewBag.paymentMethod.Method == "Paypal")
+            {
+                <span>Paypal</span><br />
+                <span>@ViewBag.paypal</span>
+            }
+            else if (ViewBag.paymentMethod.Method == "Visa")
+            {
+                <span>Visa</span><br />
+                <span>Number: @ViewBag.visa.Number</span> <br />
+                <span>Expire: @ViewBag.visa.Expire</span><span>Sequre Code: @ViewBag.visa.SequreCode</span>
+            }
+        </dd>
+
+        <table class="table-hover table">
+            <tr>
+                <th>Product Name</th>
+                <th>Product Image</th>
+                <th>Product Quantity</th>
+                <th>Product Price</th>
+            </tr>
+            @foreach (var product in ViewBag.orderedProducts)
+            {
+                <tr>
+                    <td>@product.Product.Name</td>
+                    <td><img src="~/Content/Resources/images/@product.Product.Image" width="200px" height="auto" /></td>
+                    <td>@product.Quantity</td>
+                    <td>@product.Product.Price</td>
+                </tr>
+            }
+        </table>
+
+    </dl>
+</div>

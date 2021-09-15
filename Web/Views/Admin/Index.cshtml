@@ -1,0 +1,47 @@
+﻿@model PagedList.IPagedList<BL.ViewModel.OrderViewModel>
+@using PagedList.Mvc;
+
+@{
+    Layout = "_AdminLayout.cshtml";
+    ViewBag.Title = "Index";
+}
+
+<h2>Orders</h2>
+
+<table class="table">
+    <tr>
+        <th>Time</th>
+        <th>Total Price</th>
+        <th>Buyer</th>
+        <th>Details</th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.DateTime)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.totalPrice)
+            </td>
+            <td>
+                @if(item.appUser == null)
+                {
+                    <p>AAA</p>
+                }
+                @Html.DisplayFor(modelItem => item.appUser.UserName)
+            </td>
+            <td>
+                @Html.ActionLink("Details", "OrderDetails", new { id = item.Id })
+            </td>
+        </tr>
+    }
+
+</table>
+
+Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
+<p style="text-align:right;">
+    @Html.PagedListPager(Model, page => Url.Action("Index",
+    new { page, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter }))
+</p>

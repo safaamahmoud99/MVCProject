@@ -1,0 +1,53 @@
+﻿@model Dictionary<int, BL.ViewModel.ProductViewModel>
+
+
+
+<h2>Favorite List</h2>
+@if (Model.Count == 0)
+{
+
+    <h3 class="text-center m-5 center-block">The Favorite list is empty</h3>
+
+}
+
+<div class="row m-4">
+    @foreach (var k in Model.Keys)
+    {
+
+        <div class="col-sm-4 col-md-4 ">
+            <div class="thumbnail">
+                <img src="~/Content/Resources/images/@Model[k].Image" alt="@Model[k].Name" style="width:15vw">
+                <div class="caption">
+                    <h3>@Model[k].Name</h3>
+                    <p>@Model[k].Price</p>
+                    <p>
+                        <a onclick="addToCart(@Model[k].Id)" class="btn btn-primary" role="button">Add to the Cart</a>
+                        <a href="~/FavouriteProducts/Delete?UserId=@ViewBag.userId&&ProductId=@k" class="btn btn-default" role="button">Remove</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+<p>
+    <a href="~/Home" class="btn btn-primary">Continue Shopping</a>
+</p>
+
+@section scripts{
+    <script src="~/Scripts/jquery.signalR-2.4.1.js"></script>
+    <script src="~/signalr/js"></script>
+    <script>
+        var proxy = $.connection.ShoppingCartHub;
+        $.connection.hub.start().done(
+            function () {
+                console.log("server connected");
+            }
+        );
+
+        function addToCart(productId) {
+            var userid = $("#userId").val();
+            proxy.server.AddToCart(userid, productId);
+        }
+    </script>
+}

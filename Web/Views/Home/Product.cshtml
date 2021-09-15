@@ -1,0 +1,65 @@
+﻿@model BL.ViewModel.ProductViewModel
+
+@{
+    ViewBag.Title = "Product";
+}
+
+
+<div style="margin: 10px;">
+    <h4>@Html.DisplayFor(model => model.Name)</h4>
+    <hr />
+    <div class="row">
+        <div class="col-md-6">
+            <img src="~/Content/Resources/images/@Model.Image" width="100%" height="auto" />
+        </div>
+        <input type="hidden" value="@Model.Id" id="productId"/>
+        <div class="col-md-6">
+            <dt>
+                @Html.DisplayNameFor(model => model.Details)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Details)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.Price)
+            </dt>
+
+            <dd>
+                $@Html.DisplayFor(model => model.Price)
+            </dd>
+
+            @*<dt>
+                @Html.DisplayNameFor(model => model.Quantity)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Quantity)
+            </dd>*@
+            @if(Model.Quantity != 0)
+            {
+                <a class="btn btn-primary" id="addToCart">Add To Cart</a>
+            }
+            <a class="btn btn-danger" href="/FavouriteProducts/AddToFav?ProductId=@Model.Id">Add To Favourite</a>
+        </div>
+    </div>
+</div>
+
+@section scripts{
+    <script src="~/Scripts/jquery.signalR-2.4.1.js"></script>
+    <script src="~/signalr/js"></script>
+    <script>
+        var proxy = $.connection.ShoppingCartHub;
+        $.connection.hub.start().done(
+            function () {
+                console.log("server connected")
+                $("#addToCart").click(function () {
+                    var userid = $("#userId").val();
+                    var productId = $("#productId").val();
+                    proxy.server.AddToCart(userid, productId);
+                });
+            }
+        );
+    </script>
+}
